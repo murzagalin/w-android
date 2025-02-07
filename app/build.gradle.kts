@@ -2,7 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.ksp)
     alias(libs.plugins.hilt)
 }
 
@@ -54,11 +54,10 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.hilt)
 
-    implementation(libs.room.runtime)
-    implementation(libs.room.ktx)
+    ksp(libs.hilt.compiler)
 
-    kapt(libs.hilt.compiler)
-    kapt(libs.room.compiler) // TODO replace with KSP
+    implementation(libs.moshi)
+    ksp(libs.moshi.codegen)
 
     testImplementation(libs.junit)
     testImplementation(libs.mockito)
@@ -70,8 +69,4 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-}
-
-kapt {
-    correctErrorTypes = true
 }
