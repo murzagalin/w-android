@@ -1,8 +1,11 @@
 package com.github.murzagalin.restaurants.data
 
 import android.content.Context
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
 
-class FavoritesStorage(context: Context) {
+
+class FavoritesStorage @Inject constructor(@ApplicationContext context: Context) {
 
     private val sharedPreferences = context.getSharedPreferences("favorites_prefs", Context.MODE_PRIVATE)
 

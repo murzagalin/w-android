@@ -2,8 +2,9 @@ package com.github.murzagalin.restaurants.data
 
 import com.github.murzagalin.restaurants.domain.Venue
 import com.github.murzagalin.restaurants.domain.VenuesData
+import javax.inject.Inject
 
-class VenuesApiMapper {
+class VenuesApiMapper @Inject constructor() {
 
     fun map(
         responseData: ResponseData,

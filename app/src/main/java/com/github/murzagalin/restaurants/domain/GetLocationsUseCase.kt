@@ -3,8 +3,10 @@ package com.github.murzagalin.restaurants.domain
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import javax.inject.Inject
 
-class GetLocationsUseCase {
+
+class GetLocationsUseCase @Inject constructor() {
 
     operator fun invoke(): Flow<LocationCoordinates> = flow {
         var index = 0

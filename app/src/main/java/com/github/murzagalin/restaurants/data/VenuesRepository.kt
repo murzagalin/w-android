@@ -3,8 +3,9 @@ package com.github.murzagalin.restaurants.data
 import com.github.murzagalin.restaurants.domain.IVenuesRepository
 import com.github.murzagalin.restaurants.domain.LocationCoordinates
 import com.github.murzagalin.restaurants.domain.VenuesData
+import javax.inject.Inject
 
-class VenuesRepository(
+class VenuesRepository @Inject constructor(
     private val api: VenuesApi,
     private val favoritesStorage: FavoritesStorage,
     private val venuesMapper: VenuesApiMapper
