@@ -20,13 +20,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class VenuesViewModel @Inject constructor(
-    private val locationsUseCase: GetLocationsUseCase,
-    private val venuesUseCase: GetVenuesUseCase
+    private val subscribeToLocations: GetLocationsUseCase,
+    private val getVenues: GetVenuesUseCase
 ): ViewModel() {
-
-    companion object {
-        private val TAG = this::class.simpleName
-    }
 
     val venuesFlow: StateFlow<ViewState>
         get() = _venuesFlow
@@ -38,21 +34,14 @@ class VenuesViewModel @Inject constructor(
 
     private fun subscribeToVenues() {
         viewModelScope.launch {
-            locationsUseCase()
+            subscribeToLocations()
                 .onEach { location ->
-                    Log.d(TAG, "Received New Location: $location")
                     _venuesFlow.value = ViewState.Loading
                 }
-                .map { location ->
-                    venuesUseCase(location)
-                }
+                .map { getVenues(it) }
                 .flowOn(AppDispatchers.io)
-                .catch {
-                    Log.d(TAG, "Error in location-venues flow: $it")
-                    _venuesFlow.value = ViewState.Error(it)
-                }
+                .catch { _venuesFlow.value = ViewState.Error(it) }
                 .collect { venues ->
-                    Log.d(TAG, "New venues: ${venues.name}: ${venues.venues.size}")
                     _venuesFlow.value = ViewState.Success(venues)
                 }
         }
