@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -25,7 +26,6 @@ class VenuesActivity : ComponentActivity() {
             RestaurantsTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Greeting(
-                        name = "Android",
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -36,20 +36,37 @@ class VenuesActivity : ComponentActivity() {
 
 @Composable
 fun Greeting(
-    name: String,
     viewModel: VenuesViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
+    val venuesState = viewModel.venuesFlow.collectAsState()
+    when (val state = venuesState.value) {
+        is VenuesViewModel.ViewState.Loading -> {
+            Text(
+                text = "Loading",
+                modifier = modifier
+            )
+        }
+        is VenuesViewModel.ViewState.Success -> {
+            Text(
+                text = "Got venues: ${state.venuesData.name}: ${state.venuesData.venues.size}",
+                modifier = modifier
+            )
+        }
+        is VenuesViewModel.ViewState.Error -> {
+            Text(
+                text = "Error: ${state.error}",
+                modifier = modifier
+            )
+        }
+
+        VenuesViewModel.ViewState.Empty -> {}
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     RestaurantsTheme {
-        Greeting("Android")
     }
 }

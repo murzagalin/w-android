@@ -10,6 +10,7 @@ import com.github.murzagalin.restaurants.domain.VenuesData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
@@ -27,7 +28,7 @@ class VenuesViewModel @Inject constructor(
         private val TAG = this::class.simpleName
     }
 
-    val venuesFlow: Flow<ViewState>
+    val venuesFlow: StateFlow<ViewState>
         get() = _venuesFlow
     private val _venuesFlow = MutableStateFlow<ViewState>(ViewState.Empty)
 
@@ -63,7 +64,7 @@ class VenuesViewModel @Inject constructor(
 
         data object Loading : ViewState
 
-        class Success(val venues: VenuesData) : ViewState
+        class Success(val venuesData: VenuesData) : ViewState
 
         class Error(val error: Throwable) : ViewState
 
