@@ -1,14 +1,14 @@
 package com.github.murzagalin.restaurants.data
 
 import retrofit2.http.GET
-import retrofit2.http.Path
+import retrofit2.http.Query
 
 
 interface VenuesApi {
 
-    @GET("v1/pages/restaurants?lat={lat}&lon={long}")
+    @GET("v1/pages/restaurants")
     suspend fun getVenues(
-        @Path("lat") latitude: Double,
-        @Path("long") longitude: Double
+        @Query("lat") latitude: Double,
+        @Query("lon") longitude: Double
     ): ResponseData
 }

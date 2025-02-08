@@ -18,7 +18,7 @@ class VenuesApiMapper {
                 Venue(
                     id = venue.id,
                     name = venue.name,
-                    description = venue.shortDescription,
+                    description = venue.shortDescription.orEmpty(),
                     imageUrl = item.image.url,
                     isFavourite = favouritesStates.getValue(venue.id)
                 )

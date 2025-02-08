@@ -1,6 +1,6 @@
 package com.github.murzagalin.restaurants.data
 
-import com.github.murzagalin.restaurants.domain.GetVenuesParams
+import com.github.murzagalin.restaurants.domain.LocationCoordinates
 import com.github.murzagalin.restaurants.domain.VenuesData
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
@@ -24,7 +24,7 @@ class VenuesRepositoryTest {
     private val TEST_VENUE_NAME = "Venue 1"
     private val TEST_VENUE_DESCRIPTION = "Description 1"
 
-    private val testParams = GetVenuesParams(
+    private val testParams = LocationCoordinates(
         longitude = 10.0,
         latitude = 20.0
     )

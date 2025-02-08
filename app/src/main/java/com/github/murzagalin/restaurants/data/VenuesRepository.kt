@@ -1,7 +1,7 @@
 package com.github.murzagalin.restaurants.data
 
-import com.github.murzagalin.restaurants.domain.GetVenuesParams
 import com.github.murzagalin.restaurants.domain.IVenuesRepository
+import com.github.murzagalin.restaurants.domain.LocationCoordinates
 import com.github.murzagalin.restaurants.domain.VenuesData
 
 class VenuesRepository(
@@ -10,7 +10,7 @@ class VenuesRepository(
     private val venuesMapper: VenuesApiMapper
 ) : IVenuesRepository {
 
-    override suspend fun getVenues(params: GetVenuesParams): VenuesData {
+    override suspend fun getVenues(params: LocationCoordinates): VenuesData {
         val response = api.getVenues(
             longitude = params.longitude,
             latitude = params.latitude
