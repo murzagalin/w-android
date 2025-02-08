@@ -7,27 +7,27 @@ import com.squareup.moshi.JsonClass
 data class ResponseData(
     @Json(name = "name") val name: String,
     @Json(name = "page_title") val pageTitle: String,
-    @Json(name = "sections") val sections: List<Section>
+    @Json(name = "sections") val sections: List<SectionApiModel>
 )
 
 @JsonClass(generateAdapter = true)
-data class Section(
-    @Json(name = "items") val items: List<Item>
+data class SectionApiModel(
+    @Json(name = "items") val items: List<ItemApiModel>
 )
 
 @JsonClass(generateAdapter = true)
-data class Item(
-    @Json(name = "image") val image: Image,
-    @Json(name = "venue") val venue: Venue?
+data class ItemApiModel(
+    @Json(name = "image") val image: ImageApiModel,
+    @Json(name = "venue") val venue: VenueApiModel?
 )
 
 @JsonClass(generateAdapter = true)
-data class Image(
+data class ImageApiModel(
     @Json(name = "url") val url: String
 )
 
 @JsonClass(generateAdapter = true)
-data class Venue(
+data class VenueApiModel(
     @Json(name = "id") val id: String,
     @Json(name = "name") val name: String,
     @Json(name = "short_description") val shortDescription: String,

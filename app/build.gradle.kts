@@ -52,12 +52,19 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation(libs.hilt)
 
+    // hilt
+    implementation(libs.hilt)
     ksp(libs.hilt.compiler)
 
+    //moshi
     implementation(libs.moshi)
     ksp(libs.moshi.codegen)
+
+    //retrofit
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.moshi)
+    implementation(libs.retrofit.logging)
 
     testImplementation(libs.junit)
     testImplementation(libs.mockito)
