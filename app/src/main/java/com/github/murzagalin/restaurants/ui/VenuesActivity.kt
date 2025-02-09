@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
@@ -22,17 +21,12 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class VenuesActivity : ComponentActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
             RestaurantsTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Content(
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                Content()
             }
         }
     }
@@ -40,32 +34,37 @@ class VenuesActivity : ComponentActivity() {
 
 @Composable
 fun Content(
-    viewModel: VenuesViewModel = viewModel(),
-    modifier: Modifier = Modifier
+    viewModel: VenuesViewModel = viewModel()
 ) {
     val venuesState = viewModel.venuesFlow.collectAsState()
+
     when (val state = venuesState.value) {
-        is VenuesViewModel.ViewState.Loading -> {
-            Box(
-                modifier = modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator(
-                    color = colorResource(R.color.primary)
+        is VenuesViewModel.ViewState.Content -> {
+            if (state.venuesData == null) {
+                SimpleLoading()
+            } else {
+                VenueScreen(
+                    venuesData = state.venuesData,
+                    isLoading = state.isLoading,
+                    setFavorite = { venueId, isFavourite ->
+                        viewModel.toggleFavorite(venueId, isFavourite)
+                    }
                 )
             }
         }
-        is VenuesViewModel.ViewState.Success -> {
-            VenueScreen(
-                venues = state.venuesData,
-                setFavorite = { id, isFavourite ->
-                    viewModel.toggleFavorite(id, isFavourite)
-                }
-            )
-        }
-        is VenuesViewModel.ViewState.Error -> {
-            VenuesErrorScreen(state.error)
-        }
+        is VenuesViewModel.ViewState.Error -> VenuesErrorScreen(state.error)
         VenuesViewModel.ViewState.Empty -> {}
+    }
+}
+
+@Composable
+fun SimpleLoading() {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        CircularProgressIndicator(
+            color = colorResource(R.color.primary)
+        )
     }
 }

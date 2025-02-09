@@ -39,24 +39,28 @@ class VenuesViewModel @Inject constructor(
     private fun subscribeToVenues() {
         viewModelScope.launch {
             subscribeToLocations()
-                .onEach { location ->
-                    _venuesFlow.value = ViewState.Loading
-                }
+                .onEach { setLoadingState() }
                 .flatMapLatest {
                     getVenues(it)
-                        .catch {
-                            _venuesFlow.value = ViewState.Error(it)
-                        }
+                        .catch { _venuesFlow.value = ViewState.Error(it) }
                 }
-                .catch {
-                    _venuesFlow.value = ViewState.Error(it)
-                }
+                .catch { _venuesFlow.value = ViewState.Error(it) }
                 .flowOn(AppDispatchers.io)
                 .collect { venues ->
-                    _venuesFlow.value = ViewState.Success(venues)
+                    _venuesFlow.value = ViewState.Content(venuesData = venues, isLoading = false)
                 }
         }
     }
+
+    private fun setLoadingState() {
+        val currentState = _venuesFlow.value
+        if (currentState is ViewState.Content) {
+            _venuesFlow.value = currentState.copy(isLoading = true)
+        } else {
+            _venuesFlow.value = ViewState.Content(isLoading = true)
+        }
+    }
+
 
     fun toggleFavorite(venueId: String, isFavourite: Boolean) {
         viewModelScope.launch {
@@ -68,9 +72,10 @@ class VenuesViewModel @Inject constructor(
 
         data object Empty : ViewState
 
-        data object Loading : ViewState
-
-        class Success(val venuesData: VenuesData) : ViewState
+        data class Content(
+            val venuesData: VenuesData? = null,
+            val isLoading: Boolean = false
+        ) : ViewState
 
         class Error(val error: Throwable) : ViewState
 

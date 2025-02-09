@@ -1,16 +1,21 @@
 package com.github.murzagalin.restaurants.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
@@ -25,21 +30,41 @@ import com.github.murzagalin.restaurants.domain.VenuesData
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VenueScreen(
-    venues: VenuesData,
+    venuesData: VenuesData,
+    isLoading: Boolean,
     setFavorite: (String, Boolean) -> Unit = { _, _ -> }
 ) {
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        TopAppBar(
-            title = { Text(text = venues.pageTitle, fontWeight = FontWeight.Bold) },
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = colorResource(id = R.color.primary),
-                titleContentColor = Color.White
-            )
-        )
 
-        VenuesList(venues.venues, setFavorite)
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            TopAppBar(
+                title = {
+                    Row (verticalAlignment = Alignment.CenterVertically) {
+                        Text(text = venuesData.pageTitle, fontWeight = FontWeight.Bold)
+                        if (isLoading) {
+                            CircularProgressIndicator(
+                                modifier = Modifier
+                                    .padding(start = 8.dp)
+                                    .size(16.dp),
+                                color = Color.White,
+                                strokeWidth = 2.dp
+                            )
+                        }
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = colorResource(id = R.color.primary),
+                    titleContentColor = Color.White
+                )
+            )
+
+            VenuesList(venuesData.venues, setFavorite)
+        }
     }
 }
 
@@ -73,16 +98,31 @@ fun VenuesList(
 @Preview(showBackground = true)
 @Composable
 fun VenueScreenPreview() {
-    val sampleVenues = VenuesData(
-        name = "Venues Name",
-        pageTitle = "Sample Venues",
-        venues = listOf(
-            Venue(id = "1", name = "Venue 1", description = "Description 1", imageUrl = "", isFavourite = true),
-            Venue(id = "2", name = "Venue 2", description = "Description 2", imageUrl = "", isFavourite = false),
-            Venue(id = "3", name = "Venue 3", description = "Description 3", imageUrl = "", isFavourite = false),
-            Venue(id = "4", name = "Venue 4", description = "Description 4", imageUrl = "", isFavourite = true),
-            Venue(id = "5", name = "Venue 5", description = "Description 5", imageUrl = "", isFavourite = false)
-        )
+    VenueScreen(
+        venuesData = VenuesData(
+            name = "Test Name",
+            pageTitle = "Test Page Title",
+            venues = listOf(
+                Venue("1", "Venue 1", "Description 1", "ImageUrl 1", true),
+                Venue("2", "Venue 2", "Description 2", "ImageUrl 2", false)
+            )
+        ),
+        isLoading = false
     )
-    VenueScreen(venues = sampleVenues)
+}
+
+@Preview(showBackground = true)
+@Composable
+fun VenueScreenPreviewLoadingWithContent() {
+    VenueScreen(
+        venuesData = VenuesData(
+            name = "Test Name",
+            pageTitle = "Test Page Title",
+            venues = listOf(
+                Venue("1", "Venue 1", "Description 1", "ImageUrl 1", true),
+                Venue("2", "Venue 2", "Description 2", "ImageUrl 2", false)
+            )
+        ),
+        isLoading = true
+    )
 }
