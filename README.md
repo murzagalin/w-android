@@ -1,7 +1,11 @@
 # Project Overview
 
 
-This project is built using Kotlin and follows the principles of Clean Architecture. The main goal of Clean Architecture is to separate the code into layers, making it easier to maintain, test, and scale. The project uses Gradle as the build system.  
+This project is built using Kotlin and follows the principles of Clean Architecture. 
+
+Preview:
+
+<img src="attachments/screenshot.png" alt="Screenshot Description" width="400"/>
 
 ## Features:
 1. Constant Venues update based on location. *GetLocationsUseCase* returns flows of locations. And it emits a new location every 10 seconds.
