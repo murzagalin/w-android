@@ -6,9 +6,14 @@ import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import org.junit.Before
 import org.mockito.Mockito.*
+import org.mockito.invocation.InvocationOnMock
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.whenever
+import retrofit2.HttpException
+import java.io.IOException
+import java.net.HttpURLConnection
 import kotlin.test.assertEquals
+import kotlin.test.assertIs
 
 class VenuesRepositoryTest {
 
@@ -87,5 +92,43 @@ class VenuesRepositoryTest {
         )
         verify(favoritesStorage).isFavorite(TEST_VENUE_ID)
         verify(venuesMapper).map(testResponseData, favouritesStates)
+    }
+
+
+    @Test(expected = NetworkException::class)
+    fun `mapException should map HttpException with HTTP_GATEWAY_TIMEOUT to NetworkException`() = runTest {
+        val httpException = HttpException(retrofit2.Response.error<Any>(HttpURLConnection.HTTP_GATEWAY_TIMEOUT, okhttp3.ResponseBody.create(null, "")))
+        whenever(api.getVenues(anyOrNull(), anyOrNull())).thenThrow(httpException)
+
+        // When
+        subject.getVenues(testParams)
+    }
+
+    @Test(expected = NetworkException::class)
+    fun `mapException should map IOException to NetworkException`() = runTest {
+        doAnswer { invocation: InvocationOnMock? ->
+            throw IOException("IO error")
+        }.whenever(api).getVenues(anyOrNull(), anyOrNull())
+
+        // When
+        subject.getVenues(testParams)
+    }
+
+    @Test(expected = UndefinedException::class)
+    fun `mapException should map HttpException with other codes to UndefinedException`() = runTest {
+        val httpException = HttpException(retrofit2.Response.error<Any>(HttpURLConnection.HTTP_BAD_REQUEST, okhttp3.ResponseBody.create(null, "")))
+        whenever(api.getVenues(anyOrNull(), anyOrNull())).thenThrow(httpException)
+
+        // When
+        subject.getVenues(testParams)
+    }
+
+    @Test(expected = UndefinedException::class)
+    fun `mapException should map other exceptions to UndefinedException`() = runTest {
+        val exception = RuntimeException("Generic error")
+        doThrow(exception).whenever(api).getVenues(anyOrNull(), anyOrNull())
+
+        // When
+        subject.getVenues(testParams)
     }
 }
