@@ -3,16 +3,9 @@ package com.github.murzagalin.restaurants.data
 import com.github.murzagalin.restaurants.domain.IVenuesRepository
 import com.github.murzagalin.restaurants.domain.LocationCoordinates
 import com.github.murzagalin.restaurants.domain.VenuesData
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.filterNotNull
-import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.stateIn
 import javax.inject.Inject
 import retrofit2.HttpException
 import java.io.IOException
@@ -25,16 +18,20 @@ class VenuesRepository @Inject constructor(
 ) : IVenuesRepository {
 
     override suspend fun getVenues(params: LocationCoordinates): Flow<VenuesData> {
-        val response = try {
-            api.getVenues(
-                longitude = params.longitude,
-                latitude = params.latitude
-            )
-        } catch (e: Exception) {
-            throw e.mapException()
+        val responseFlow = flow {
+            val response = try {
+                api.getVenues(
+                    longitude = params.longitude,
+                    latitude = params.latitude
+                )
+            } catch (e: Exception) {
+                throw e.mapException()
+            }
+
+            emit(response)
         }
 
-        return favoritesStorage.favoritesFlow.map { favourites ->
+        return combine(responseFlow, favoritesStorage.favoritesFlow) { response, favourites ->
             venuesMapper.map(response, favourites)
         }
     }
