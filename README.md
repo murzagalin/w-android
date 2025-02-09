@@ -9,7 +9,7 @@ Preview:
 
 ## Features:
 1. Constant Venues update based on location. *GetLocationsUseCase* returns flows of locations. And it emits a new location every 10 seconds.
-2. Venues list: venues are reloaded for a new location. Every time *GetLocationsUseCase* emits a new location, *GetVenuesUseCase* requests new venues.
+2. Venues list: venues are reloaded for each location. Every time *GetLocationsUseCase* emits a new location, *GetVenuesUseCase* requests new venues.
 3. Favourites: users can save their favourites venues by clicking on hearth icon next to the venue name. The favourites data is saved locally in SharedPreferences.
 4. Accessibility: Check the accessibility section below
 
