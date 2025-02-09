@@ -30,7 +30,7 @@ import com.github.murzagalin.restaurants.domain.VenuesData
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VenueScreen(
-    venuesData: VenuesData,
+    venuesData: VenuesDataUiModel,
     isLoading: Boolean,
     setFavorite: (String, Boolean) -> Unit = { _, _ -> }
 ) {
@@ -70,7 +70,7 @@ fun VenueScreen(
 
 @Composable
 fun VenuesList(
-    venues: List<Venue>,
+    venues: List<VenueUiModel>,
     setFavorite: (String, Boolean) -> Unit
 ) {
     LazyColumn(
@@ -103,12 +103,11 @@ fun VenuesList(
 @Composable
 fun VenueScreenPreview() {
     VenueScreen(
-        venuesData = VenuesData(
-            name = "Test Name",
+        venuesData = VenuesDataUiModel(
             pageTitle = "Test Page Title",
             venues = listOf(
-                Venue("1", "Venue 1", "Description 1", "ImageUrl 1", true),
-                Venue("2", "Venue 2", "Description 2", "ImageUrl 2", false)
+                VenueUiModel("1", "Venue 1", "Description 1", "ImageUrl 1", true),
+                VenueUiModel("2", "Venue 2", "Description 2", "ImageUrl 2", false)
             )
         ),
         isLoading = false
@@ -119,12 +118,11 @@ fun VenueScreenPreview() {
 @Composable
 fun VenueScreenPreviewLoadingWithContent() {
     VenueScreen(
-        venuesData = VenuesData(
-            name = "Test Name",
+        venuesData = VenuesDataUiModel(
             pageTitle = "Test Page Title",
             venues = listOf(
-                Venue("1", "Venue 1", "Description 1", "ImageUrl 1", true),
-                Venue("2", "Venue 2", "Description 2", "ImageUrl 2", false)
+                VenueUiModel("1", "Venue 1", "Description 1", "ImageUrl 1", true),
+                VenueUiModel("2", "Venue 2", "Description 2", "ImageUrl 2", false)
             )
         ),
         isLoading = true

@@ -28,7 +28,7 @@ class VenuesUiMapperTest {
             )
         )
 
-        val actualUiModel = mapper.mapToUiModel(venuesData)
+        val actualUiModel = mapper.map(venuesData)
 
         assertEquals(expectedUiModel, actualUiModel)
     }
@@ -44,7 +44,7 @@ class VenuesUiMapperTest {
             venues = venues
         )
 
-        val actualUiModel = mapper.mapToUiModel(venuesData)
+        val actualUiModel = mapper.map(venuesData)
 
         assertEquals(VenuesUiMapper.MAX_VENUES_COUNT, actualUiModel.venues.size)
     }

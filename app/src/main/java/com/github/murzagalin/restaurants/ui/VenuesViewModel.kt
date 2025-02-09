@@ -25,7 +25,8 @@ import javax.inject.Inject
 class VenuesViewModel @Inject constructor(
     private val subscribeToLocations: GetLocationsUseCase,
     private val getVenues: GetVenuesUseCase,
-    private val setFavorite: SetFavoriteUseCase
+    private val setFavorite: SetFavoriteUseCase,
+    private val uiMapper: VenuesUiMapper
 ): ViewModel() {
 
     val venuesFlow: StateFlow<ViewState>
@@ -40,8 +41,9 @@ class VenuesViewModel @Inject constructor(
         viewModelScope.launch {
             subscribeToLocations()
                 .onEach { setLoadingState() }
-                .flatMapLatest {
-                    getVenues(it)
+                .flatMapLatest { location ->
+                    getVenues(location)
+                        .map { uiMapper.map(it) }
                         .catch { _venuesFlow.value = ViewState.Error(it) }
                 }
                 .catch { _venuesFlow.value = ViewState.Error(it) }
@@ -73,7 +75,7 @@ class VenuesViewModel @Inject constructor(
         data object Empty : ViewState
 
         data class Content(
-            val venuesData: VenuesData? = null,
+            val venuesData: VenuesDataUiModel? = null,
             val isLoading: Boolean = false
         ) : ViewState
 

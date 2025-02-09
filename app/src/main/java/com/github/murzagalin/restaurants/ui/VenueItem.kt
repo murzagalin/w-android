@@ -31,7 +31,7 @@ import com.github.murzagalin.restaurants.domain.Venue
 
 @Composable
 fun VenueItem(
-    venue: Venue,
+    venue: VenueUiModel,
     modifier: Modifier = Modifier,
     onFavouriteClick: (String, Boolean) -> Unit = { _, _ -> }
 ) {
@@ -104,7 +104,7 @@ fun VenueItem(
 @Composable
 fun VenueItemPreview() {
     VenueItem(
-        venue = Venue(
+        venue = VenueUiModel(
             id = "1",
             name = "Test Venue",
             description = "This is a test description",
@@ -118,7 +118,7 @@ fun VenueItemPreview() {
 @Composable
 fun VenueItemFavouritePreview() {
     VenueItem(
-        venue = Venue(
+        venue = VenueUiModel(
             id = "2",
             name = "Favourite Venue",
             description = "This is a favourite venue",
@@ -132,7 +132,7 @@ fun VenueItemFavouritePreview() {
 @Composable
 fun VenueItemOverflowPreview() {
     VenueItem(
-        venue = Venue(
+        venue = VenueUiModel(
             id = "1",
             name = "Test Venue with very long title",
             description = "This is a test description, that is very long to fit in 2 lines. " +
