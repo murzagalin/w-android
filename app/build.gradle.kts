@@ -66,6 +66,10 @@ dependencies {
     implementation(libs.retrofit.moshi)
     implementation(libs.retrofit.logging)
 
+    //coil
+    implementation(libs.coil.compose)
+    implementation(libs.coil.networking)
+
     testImplementation(libs.junit)
     testImplementation(libs.mockito)
     testImplementation(libs.kotlin.coroutines.test)

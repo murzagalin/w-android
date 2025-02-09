@@ -16,6 +16,7 @@ retrofit-version = "2.9.0"
 ksp-version = "2.0.20-1.0.24"
 logging-interceptor = "4.11.0"
 turbine-version = "1.2.0"
+coil-version = "3.1.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -43,6 +44,8 @@ retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = 
 retrofit-moshi = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "retrofit-version" }
 retrofit-logging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "logging-interceptor" }
 turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine-version" }
+coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil-version" }
+coil-networking = { group = "io.coil-kt.coil3", name = "coil-network-okhttp", version.ref = "coil-version" }
 
 
 [plugins]

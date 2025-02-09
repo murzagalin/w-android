@@ -4,15 +4,19 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.colorResource
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.github.murzagalin.restaurants.R
 import com.github.murzagalin.restaurants.ui.theme.RestaurantsTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -25,7 +29,7 @@ class VenuesActivity : ComponentActivity() {
         setContent {
             RestaurantsTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
+                    Content(
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -35,38 +39,28 @@ class VenuesActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(
+fun Content(
     viewModel: VenuesViewModel = viewModel(),
     modifier: Modifier = Modifier
 ) {
     val venuesState = viewModel.venuesFlow.collectAsState()
     when (val state = venuesState.value) {
         is VenuesViewModel.ViewState.Loading -> {
-            Text(
-                text = "Loading",
-                modifier = modifier
-            )
+            Box(
+                modifier = modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(
+                    color = colorResource(R.color.primary)
+                )
+            }
         }
         is VenuesViewModel.ViewState.Success -> {
-            Text(
-                text = "Got venues: ${state.venuesData.name}: ${state.venuesData.venues.size}",
-                modifier = modifier
-            )
+            VenueScreen(state.venuesData)
         }
         is VenuesViewModel.ViewState.Error -> {
-            Text(
-                text = "Error: ${state.error}",
-                modifier = modifier
-            )
+            VenuesErrorScreen(state.error)
         }
-
         VenuesViewModel.ViewState.Empty -> {}
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    RestaurantsTheme {
     }
 }
