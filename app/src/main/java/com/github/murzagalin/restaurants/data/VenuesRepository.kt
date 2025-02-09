@@ -6,10 +6,10 @@ import com.github.murzagalin.restaurants.domain.VenuesData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flow
-import javax.inject.Inject
 import retrofit2.HttpException
 import java.io.IOException
 import java.net.HttpURLConnection
+import javax.inject.Inject
 
 class VenuesRepository @Inject constructor(
     private val api: VenuesApi,

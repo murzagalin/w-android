@@ -23,8 +23,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.murzagalin.restaurants.R
-import com.github.murzagalin.restaurants.domain.Venue
-import com.github.murzagalin.restaurants.domain.VenuesData
 
 
 @OptIn(ExperimentalMaterial3Api::class)

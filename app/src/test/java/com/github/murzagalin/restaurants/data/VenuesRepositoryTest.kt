@@ -5,9 +5,12 @@ import com.github.murzagalin.restaurants.domain.LocationCoordinates
 import com.github.murzagalin.restaurants.domain.VenuesData
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
-import org.junit.Test
 import org.junit.Before
-import org.mockito.Mockito.*
+import org.junit.Test
+import org.mockito.Mockito.doAnswer
+import org.mockito.Mockito.doThrow
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.verify
 import org.mockito.invocation.InvocationOnMock
 import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.whenever

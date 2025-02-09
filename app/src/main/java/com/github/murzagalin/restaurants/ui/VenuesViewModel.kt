@@ -6,10 +6,8 @@ import com.github.murzagalin.restaurants.AppDispatchers
 import com.github.murzagalin.restaurants.domain.GetLocationsUseCase
 import com.github.murzagalin.restaurants.domain.GetVenuesUseCase
 import com.github.murzagalin.restaurants.domain.SetFavoriteUseCase
-import com.github.murzagalin.restaurants.domain.VenuesData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch

@@ -1,6 +1,6 @@
 package com.github.murzagalin.restaurants.ui
-import com.github.murzagalin.restaurants.domain.VenuesData
 import com.github.murzagalin.restaurants.domain.Venue
+import com.github.murzagalin.restaurants.domain.VenuesData
 import javax.inject.Inject
 
 class VenuesUiMapper @Inject constructor() {
