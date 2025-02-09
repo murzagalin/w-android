@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.invisibleToUser
 import androidx.compose.ui.semantics.semantics
@@ -37,13 +38,17 @@ fun VenueItem(
     modifier: Modifier = Modifier,
     onFavouriteClick: (String, Boolean) -> Unit = { _, _ -> }
 ) {
+    val talkBackFavouriteText = if (venue.isFavourite)
+        stringResource(id = R.string.favourite_restaurant_talkback)
+    else
+        stringResource(id = R.string.not_favourite_restaurant_talkback)
 
     Row(
         modifier = modifier
             .fillMaxWidth()
             .padding(16.dp)
             .semantics(mergeDescendants = true) {
-                contentDescription = "${venue.name}, ${if (venue.isFavourite) "Favourite" else "Not Favourite"}"
+                contentDescription = "${venue.name}, $talkBackFavouriteText"
             },
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
@@ -96,7 +101,7 @@ fun VenueItem(
                     else
                         R.drawable.ic_favourite_outline
                 ),
-                contentDescription = null,
+                contentDescription = stringResource(id = R.string.favourite_btn_talkback),
                 tint = if (venue.isFavourite)
                     Color.Red
                 else

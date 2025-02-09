@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.murzagalin.restaurants.R
@@ -28,8 +29,8 @@ fun VenuesErrorScreen(
     }
 
     val text = when (error) {
-        is NetworkException -> "No internet. Please check your internet connection."
-        else -> "An unexpected error happened."
+        is NetworkException -> stringResource(R.string.error_text_no_internet)
+        else -> stringResource(R.string.error_text_undefined)
     }
 
     Box(
