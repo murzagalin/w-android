@@ -1,5 +1,7 @@
 package com.github.murzagalin.restaurants.domain
 
+import app.cash.turbine.test
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
@@ -36,13 +38,15 @@ class GetVenuesUseCaseTest {
                 Venue("2", "Venue 2", "Description 2", TEST_URL, false)
             )
         )
-        whenever(venuesRepository.getVenues(params)).thenReturn(expectedVenuesData)
+        whenever(venuesRepository.getVenues(params)).thenReturn(flowOf(expectedVenuesData))
 
         // When
-        val result = subject.invoke(params)
+        subject(params).test {
+            // Then
+            assertEquals(expectedVenuesData, awaitItem())
+            awaitComplete()
+        }
 
-        // Then
-        assertEquals(result, expectedVenuesData)
         verify(venuesRepository).getVenues(params)
     }
 
@@ -53,9 +57,8 @@ class GetVenuesUseCaseTest {
         whenever(venuesRepository.getVenues(params)).thenThrow(Exception::class.java)
 
         // When
-        subject.invoke(params)
-
-        // Then
-        // Exception is expected
+        subject.invoke(params).test {
+            awaitError()
+        }
     }
 }

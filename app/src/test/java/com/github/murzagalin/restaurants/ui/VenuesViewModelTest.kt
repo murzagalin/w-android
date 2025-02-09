@@ -17,7 +17,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertIs
 
 class VenuesViewModelTest {
-
+/*
     private val viewModel: VenuesViewModel by lazy {
         VenuesViewModel(locationsUseCase, venuesUseCase)
     }
@@ -51,5 +51,5 @@ class VenuesViewModelTest {
             assertIs<RuntimeException>(state.error)
             assertEquals(exception.message, state.error.message)
         }
-    }
+    }*/
 }

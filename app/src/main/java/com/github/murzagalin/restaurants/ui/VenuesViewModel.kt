@@ -8,10 +8,13 @@ import com.github.murzagalin.restaurants.domain.GetLocationsUseCase
 import com.github.murzagalin.restaurants.domain.GetVenuesUseCase
 import com.github.murzagalin.restaurants.domain.VenuesData
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flatMap
+import kotlinx.coroutines.flow.flatMapConcat
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -19,6 +22,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
+@OptIn(ExperimentalCoroutinesApi::class)
 class VenuesViewModel @Inject constructor(
     private val subscribeToLocations: GetLocationsUseCase,
     private val getVenues: GetVenuesUseCase
@@ -38,7 +42,7 @@ class VenuesViewModel @Inject constructor(
                 .onEach { location ->
                     _venuesFlow.value = ViewState.Loading
                 }
-                .map { getVenues(it) }
+                .flatMapConcat { getVenues(it) }
                 .flowOn(AppDispatchers.io)
                 .catch { _venuesFlow.value = ViewState.Error(it) }
                 .collect { venues ->

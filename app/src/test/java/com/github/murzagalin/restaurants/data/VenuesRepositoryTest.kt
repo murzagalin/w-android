@@ -1,7 +1,9 @@
 package com.github.murzagalin.restaurants.data
 
+import app.cash.turbine.test
 import com.github.murzagalin.restaurants.domain.LocationCoordinates
 import com.github.murzagalin.restaurants.domain.VenuesData
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import org.junit.Before
@@ -78,57 +80,63 @@ class VenuesRepositoryTest {
         )
 
         whenever(api.getVenues(anyOrNull(), anyOrNull())).thenReturn(testResponseData)
-        whenever(favoritesStorage.isFavorite(anyOrNull())).thenReturn(true)
+        whenever(favoritesStorage.favoritesFlow).thenReturn(flowOf(favouritesStates))
         whenever(venuesMapper.map(anyOrNull(), anyOrNull())).thenReturn(expectedVenuesData)
 
         // When
-        val result = subject.getVenues(testParams)
+        subject.getVenues(testParams).test {
+            assertEquals(expectedVenuesData, awaitItem())
+            awaitComplete()
+        }
 
         // Then
-        assertEquals(expectedVenuesData, result)
         verify(api).getVenues(
             latitude = testParams.latitude,
             longitude = testParams.longitude
         )
-        verify(favoritesStorage).isFavorite(TEST_VENUE_ID)
+        verify(favoritesStorage).favoritesFlow
         verify(venuesMapper).map(testResponseData, favouritesStates)
     }
 
 
-    @Test(expected = NetworkException::class)
+    @Test
     fun `mapException should map HttpException with HTTP_GATEWAY_TIMEOUT to NetworkException`() = runTest {
         val httpException = HttpException(retrofit2.Response.error<Any>(HttpURLConnection.HTTP_GATEWAY_TIMEOUT, okhttp3.ResponseBody.create(null, "")))
         whenever(api.getVenues(anyOrNull(), anyOrNull())).thenThrow(httpException)
 
-        // When
-        subject.getVenues(testParams)
+        subject.getVenues(testParams).test {
+            assertIs<NetworkException>(awaitError())
+        }
     }
 
-    @Test(expected = NetworkException::class)
+    @Test
     fun `mapException should map IOException to NetworkException`() = runTest {
         doAnswer { invocation: InvocationOnMock? ->
             throw IOException("IO error")
         }.whenever(api).getVenues(anyOrNull(), anyOrNull())
 
-        // When
-        subject.getVenues(testParams)
+        subject.getVenues(testParams).test {
+            assertIs<NetworkException>(awaitError())
+        }
     }
 
-    @Test(expected = UndefinedException::class)
+    @Test
     fun `mapException should map HttpException with other codes to UndefinedException`() = runTest {
         val httpException = HttpException(retrofit2.Response.error<Any>(HttpURLConnection.HTTP_BAD_REQUEST, okhttp3.ResponseBody.create(null, "")))
         whenever(api.getVenues(anyOrNull(), anyOrNull())).thenThrow(httpException)
 
-        // When
-        subject.getVenues(testParams)
+        subject.getVenues(testParams).test {
+            assertIs<UndefinedException>(awaitError())
+        }
     }
 
-    @Test(expected = UndefinedException::class)
+    @Test
     fun `mapException should map other exceptions to UndefinedException`() = runTest {
         val exception = RuntimeException("Generic error")
         doThrow(exception).whenever(api).getVenues(anyOrNull(), anyOrNull())
 
-        // When
-        subject.getVenues(testParams)
+        subject.getVenues(testParams).test {
+            assertIs<UndefinedException>(awaitError())
+        }
     }
 }
