@@ -18,6 +18,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.invisibleToUser
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -39,7 +42,10 @@ fun VenueItem(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(16.dp)
+            .semantics(mergeDescendants = true) {
+                contentDescription = "${venue.name}, ${if (venue.isFavourite) "Favourite" else "Not Favourite"}"
+            },
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         AsyncImage(
@@ -48,7 +54,7 @@ fun VenueItem(
                 .crossfade(true)
                 .build(),
             placeholder = painterResource(R.drawable.ic_img_loading),
-            contentDescription = venue.name,
+            contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .align(Alignment.CenterVertically)
@@ -60,6 +66,7 @@ fun VenueItem(
             modifier = Modifier
                 .weight(1f)
                 .align(Alignment.CenterVertically)
+                .semantics { invisibleToUser() }
         ) {
             Text(
                 text = venue.name,
@@ -90,7 +97,7 @@ fun VenueItem(
                     else
                         R.drawable.ic_favourite_outline
                 ),
-                contentDescription = "Favorite Icon",
+                contentDescription = null,
                 tint = if (venue.isFavourite)
                     Color.Red
                 else
