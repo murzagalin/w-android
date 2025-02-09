@@ -55,10 +55,8 @@ class VenuesApiMapperTest {
             )
         )
 
-        // When
         val result = subject.map(testResponseData, favouritesStates)
 
-        // Then
         assertEquals(expectedVenuesData, result)
     }
 
@@ -78,10 +76,8 @@ class VenuesApiMapperTest {
             )
         )
 
-        // When
         val result = subject.map(testResponseData, emptyMap())
 
-        // Then
         assertEquals(expectedVenuesData, result)
     }
 }

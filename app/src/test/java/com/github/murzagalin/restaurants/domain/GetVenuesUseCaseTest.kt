@@ -28,7 +28,6 @@ class GetVenuesUseCaseTest {
 
     @Test
     fun `invoke should return venues data`() = runTest {
-        // Given
         val params = LocationCoordinates(10.0, 20.0)
         val expectedVenuesData = VenuesData(
             name = "Test Name",
@@ -40,9 +39,7 @@ class GetVenuesUseCaseTest {
         )
         whenever(venuesRepository.getVenues(params)).thenReturn(flowOf(expectedVenuesData))
 
-        // When
         subject(params).test {
-            // Then
             assertEquals(expectedVenuesData, awaitItem())
             awaitComplete()
         }
@@ -52,11 +49,9 @@ class GetVenuesUseCaseTest {
 
     @Test(expected = Exception::class)
     fun `invoke should throw exception when repository fails`() = runTest {
-        // Given
         val params = LocationCoordinates(10.0, 20.0)
         whenever(venuesRepository.getVenues(params)).thenThrow(Exception::class.java)
 
-        // When
         subject.invoke(params).test {
             awaitError()
         }

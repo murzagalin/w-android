@@ -20,10 +20,9 @@ class GetLocationsUseCaseTest {
 
     @Test
     fun `invoke should emit locations in sequence`() = runTest {
-        // Given
+
         val expectedLocations = GetLocationsUseCase.locations
 
-        // When & Then
         getLocationsUseCase().test {
             expectedLocations.forEach { expectedLocation ->
                 assertEquals(expectedLocation, awaitItem())
@@ -34,12 +33,10 @@ class GetLocationsUseCaseTest {
 
     @Test
     fun `invoke should emit locations with delay`() = runTest {
-        // Given
         val expectedDelay = 10_000L
         val expectedFirstLocation = GetLocationsUseCase.locations[0]
         val expectedSecondLocation = GetLocationsUseCase.locations[1]
 
-        // When & Then
         getLocationsUseCase().test {
             assertEquals(expectedFirstLocation, awaitItem())
             advanceTimeBy(expectedDelay)

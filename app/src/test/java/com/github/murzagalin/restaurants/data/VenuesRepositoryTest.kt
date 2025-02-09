@@ -83,13 +83,11 @@ class VenuesRepositoryTest {
         whenever(favoritesStorage.favoritesFlow).thenReturn(flowOf(favouritesStates))
         whenever(venuesMapper.map(anyOrNull(), anyOrNull())).thenReturn(expectedVenuesData)
 
-        // When
         subject.getVenues(testParams).test {
             assertEquals(expectedVenuesData, awaitItem())
             awaitComplete()
         }
 
-        // Then
         verify(api).getVenues(
             latitude = testParams.latitude,
             longitude = testParams.longitude

@@ -10,18 +10,15 @@ import com.github.murzagalin.restaurants.domain.VenuesData
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.kotlin.any
-import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.mock
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertIs
-import kotlin.test.assertTrue
 
 class VenuesViewModelTest {
 
@@ -42,7 +39,6 @@ class VenuesViewModelTest {
         )
     }
 
-    // Mock necessary data
     private val location = LocationCoordinates(0.0, 10.0)
     private val TEST_NAME = "TestName"
     private val venuesData = VenuesData(TEST_NAME, "TEST PAGE TITLE", emptyList())
