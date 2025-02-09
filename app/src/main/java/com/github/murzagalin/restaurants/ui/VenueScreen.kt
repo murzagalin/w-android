@@ -80,7 +80,11 @@ fun VenuesList(
             count = venues.size,
             key = { index -> venues[index].id }
         ) { index ->
-            VenueItem(venues[index], setFavorite)
+            VenueItem(
+                venue = venues[index],
+                modifier = Modifier.animateItem(),
+                setFavorite
+            )
 
             if (index < venues.size - 1) {
                 HorizontalDivider(
