@@ -21,7 +21,7 @@ class VenuesApiMapper @Inject constructor() {
                     name = venue.name,
                     description = venue.shortDescription.orEmpty(),
                     imageUrl = item.image.url,
-                    isFavourite = favouritesStates.getValue(venue.id)
+                    isFavourite = favouritesStates.getOrDefault(venue.id, false)
                 )
             }
     )

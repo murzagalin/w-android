@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flatMap
 import kotlinx.coroutines.flow.flatMapConcat
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
@@ -42,9 +43,16 @@ class VenuesViewModel @Inject constructor(
                 .onEach { location ->
                     _venuesFlow.value = ViewState.Loading
                 }
-                .flatMapConcat { getVenues(it) }
+                .flatMapLatest {
+                    getVenues(it)
+                        .catch {
+                            _venuesFlow.value = ViewState.Error(it)
+                        }
+                }
+                .catch {
+                    _venuesFlow.value = ViewState.Error(it)
+                }
                 .flowOn(AppDispatchers.io)
-                .catch { _venuesFlow.value = ViewState.Error(it) }
                 .collect { venues ->
                     _venuesFlow.value = ViewState.Success(venues)
                 }
