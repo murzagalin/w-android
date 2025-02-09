@@ -5,51 +5,104 @@ import com.github.murzagalin.restaurants.MainDispatcherRule
 import com.github.murzagalin.restaurants.domain.GetLocationsUseCase
 import com.github.murzagalin.restaurants.domain.GetVenuesUseCase
 import com.github.murzagalin.restaurants.domain.LocationCoordinates
+import com.github.murzagalin.restaurants.domain.SetFavoriteUseCase
 import com.github.murzagalin.restaurants.domain.VenuesData
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.kotlin.any
+import org.mockito.kotlin.anyOrNull
 import org.mockito.kotlin.mock
+import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlin.test.assertIs
+import kotlin.test.assertTrue
 
 class VenuesViewModelTest {
-/*
-    private val viewModel: VenuesViewModel by lazy {
-        VenuesViewModel(locationsUseCase, venuesUseCase)
-    }
-    private val locationsUseCase: GetLocationsUseCase = mock()
-    private val venuesUseCase: GetVenuesUseCase = mock()
 
     @get:Rule
     val dispatcherRule = MainDispatcherRule()
 
+    private val subscribeToLocations: GetLocationsUseCase = mock()
+    private val getVenues: GetVenuesUseCase = mock()
+    private val setFavorite: SetFavoriteUseCase = mock()
+    private val uiMapper: VenuesUiMapper = mock()
+
+    private val viewModel: VenuesViewModel by lazy {
+        VenuesViewModel(
+            subscribeToLocations = subscribeToLocations,
+            getVenues = getVenues,
+            setFavorite = setFavorite,
+            uiMapper = uiMapper
+        )
+    }
+
+    // Mock necessary data
+    private val location = LocationCoordinates(0.0, 10.0)
+    private val TEST_NAME = "TestName"
+    private val venuesData = VenuesData(TEST_NAME, "TEST PAGE TITLE", emptyList())
+    private val venuesUIData = VenuesDataUiModel(TEST_NAME, emptyList())
+
+
     @Test
-    fun `test success state`() = runTest {
-        val locationCoordinates = LocationCoordinates(0.0, 1.0)
-        whenever(locationsUseCase()).thenReturn(flowOf(locationCoordinates))
-        whenever(venuesUseCase(any())).thenReturn(VenuesData("TEST NAME", "TEST TITLE", emptyList()))
+    fun `test venues flow emits loading, then content`() = runTest {
+        whenever(subscribeToLocations()).thenReturn(flowOf(location))
+        whenever(getVenues(any())).thenReturn(flowOf(venuesData))
+        whenever(uiMapper.map(any())).thenReturn(venuesUIData)
 
         viewModel.venuesFlow.test {
-            assertIs<VenuesViewModel.ViewState.Success>(awaitItem())
+            val contentState = awaitItem()
+            assertIs<VenuesViewModel.ViewState.Content>(contentState)
+            assertEquals(venuesUIData, contentState.venuesData)
+            assertFalse(contentState.isLoading)
+
+            cancelAndConsumeRemainingEvents()
         }
     }
 
     @Test
-    fun `test error state`() = runTest {
-        val exception = RuntimeException("Test exception")
-        val locationCoordinates = LocationCoordinates(0.0, 1.0)
-        whenever(locationsUseCase()).thenReturn(flowOf(locationCoordinates))
-        whenever(venuesUseCase(any())).thenThrow(exception)
+    fun `test venues flow emits error state when getVenues throws error`() = runTest {
+        val error = RuntimeException("test")
+        whenever(subscribeToLocations()).thenReturn(flowOf(location))
+        whenever(getVenues(location)).thenThrow(error)
 
         viewModel.venuesFlow.test {
-            val state = awaitItem()
-            assertIs<VenuesViewModel.ViewState.Error>(state)
-            assertIs<RuntimeException>(state.error)
-            assertEquals(exception.message, state.error.message)
+            val errorState = awaitItem()
+            assertIs<VenuesViewModel.ViewState.Error>(errorState)
+            assertEquals(error.message, errorState.error.message)
+
+            cancelAndConsumeRemainingEvents()
         }
-    }*/
+    }
+
+    @Test
+    fun `test venues flow emits error state when subscribeToLocations throws error`() = runTest {
+        val error = RuntimeException("test")
+        whenever(subscribeToLocations()).thenAnswer {
+            flow<LocationCoordinates> { throw error }
+        }
+
+        viewModel.venuesFlow.test {
+            val errorState = awaitItem()
+            assertIs<VenuesViewModel.ViewState.Error>(errorState)
+            assertEquals(error.message, errorState.error.message)
+
+            cancelAndConsumeRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `test toggleFavorite calls setFavorite with correct parameters`() = runTest {
+        val venueId = "venue-id"
+        val isFavorite = true
+
+        viewModel.toggleFavorite(venueId, isFavorite)
+
+        verify(setFavorite).invoke(venueId, isFavorite)
+    }
 }

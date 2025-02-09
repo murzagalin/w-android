@@ -46,7 +46,9 @@ class VenuesViewModel @Inject constructor(
                         .map { uiMapper.map(it) }
                         .catch { _venuesFlow.value = ViewState.Error(it) }
                 }
-                .catch { _venuesFlow.value = ViewState.Error(it) }
+                .catch {
+                    _venuesFlow.value = ViewState.Error(it)
+                }
                 .flowOn(AppDispatchers.io)
                 .collect { venues ->
                     _venuesFlow.value = ViewState.Content(venuesData = venues, isLoading = false)
