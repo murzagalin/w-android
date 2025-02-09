@@ -1,7 +1,9 @@
 package com.github.murzagalin.restaurants.di
 
+import com.github.murzagalin.restaurants.data.FavoritesRepository
 import com.github.murzagalin.restaurants.data.VenuesApi
 import com.github.murzagalin.restaurants.data.VenuesRepository
+import com.github.murzagalin.restaurants.domain.IFavoritesRepository
 import com.github.murzagalin.restaurants.domain.IVenuesRepository
 import dagger.Binds
 import dagger.Module
@@ -19,7 +21,10 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 abstract class ApiModule {
 
     @Binds
-    abstract fun bindsRepository(impl: VenuesRepository): IVenuesRepository
+    abstract fun bindsVenuesRepository(impl: VenuesRepository): IVenuesRepository
+
+    @Binds
+    abstract fun bindsFavouritesRepository(impl: FavoritesRepository): IFavoritesRepository
 
     companion object {
         @Provides

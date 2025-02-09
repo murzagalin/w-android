@@ -25,7 +25,8 @@ import com.github.murzagalin.restaurants.domain.VenuesData
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VenueScreen(
-    venues: VenuesData
+    venues: VenuesData,
+    setFavorite: (String, Boolean) -> Unit = { _, _ -> }
 ) {
     Column(
         modifier = Modifier.fillMaxSize()
@@ -38,12 +39,15 @@ fun VenueScreen(
             )
         )
 
-        VenuesList(venues.venues)
+        VenuesList(venues.venues, setFavorite)
     }
 }
 
 @Composable
-fun VenuesList(venues: List<Venue>) {
+fun VenuesList(
+    venues: List<Venue>,
+    setFavorite: (String, Boolean) -> Unit
+) {
     LazyColumn(
         modifier = Modifier.background(Color.White)
     ) {
@@ -51,7 +55,8 @@ fun VenuesList(venues: List<Venue>) {
             count = venues.size,
             key = { index -> venues[index].id }
         ) { index ->
-            VenueItem(venues[index])
+            VenueItem(venues[index], setFavorite)
+
             if (index < venues.size - 1) {
                 HorizontalDivider(
                     modifier = Modifier

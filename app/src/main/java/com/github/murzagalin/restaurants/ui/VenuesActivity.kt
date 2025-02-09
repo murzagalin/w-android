@@ -56,7 +56,12 @@ fun Content(
             }
         }
         is VenuesViewModel.ViewState.Success -> {
-            VenueScreen(state.venuesData)
+            VenueScreen(
+                venues = state.venuesData,
+                setFavorite = { id, isFavourite ->
+                    viewModel.toggleFavorite(id, isFavourite)
+                }
+            )
         }
         is VenuesViewModel.ViewState.Error -> {
             VenuesErrorScreen(state.error)

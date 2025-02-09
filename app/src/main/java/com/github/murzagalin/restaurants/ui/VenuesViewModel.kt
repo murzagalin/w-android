@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.github.murzagalin.restaurants.AppDispatchers
 import com.github.murzagalin.restaurants.domain.GetLocationsUseCase
 import com.github.murzagalin.restaurants.domain.GetVenuesUseCase
+import com.github.murzagalin.restaurants.domain.SetFavoriteUseCase
 import com.github.murzagalin.restaurants.domain.VenuesData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -26,7 +27,8 @@ import javax.inject.Inject
 @OptIn(ExperimentalCoroutinesApi::class)
 class VenuesViewModel @Inject constructor(
     private val subscribeToLocations: GetLocationsUseCase,
-    private val getVenues: GetVenuesUseCase
+    private val getVenues: GetVenuesUseCase,
+    private val setFavorite: SetFavoriteUseCase
 ): ViewModel() {
 
     val venuesFlow: StateFlow<ViewState>
@@ -56,6 +58,12 @@ class VenuesViewModel @Inject constructor(
                 .collect { venues ->
                     _venuesFlow.value = ViewState.Success(venues)
                 }
+        }
+    }
+
+    fun toggleFavorite(venueId: String, isFavourite: Boolean) {
+        viewModelScope.launch {
+            setFavorite(venueId, isFavourite)
         }
     }
 

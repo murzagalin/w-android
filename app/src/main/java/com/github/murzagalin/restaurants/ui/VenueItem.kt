@@ -37,7 +37,7 @@ import com.github.murzagalin.restaurants.domain.Venue
 @Composable
 fun VenueItem(
     venue: Venue,
-    onFavouriteClick: () -> Unit = {}
+    onFavouriteClick: (String, Boolean) -> Unit = { _, _ -> }
 ) {
 
     Row(
@@ -85,7 +85,7 @@ fun VenueItem(
         IconButton(
             modifier = Modifier
                 .align(Alignment.CenterVertically),
-            onClick = { onFavouriteClick() }
+            onClick = { onFavouriteClick(venue.id, !venue.isFavourite) }
         ) {
             Icon(
                 painter = painterResource(
