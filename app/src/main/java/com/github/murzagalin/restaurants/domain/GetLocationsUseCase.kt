@@ -18,7 +18,7 @@ class GetLocationsUseCase @Inject constructor() {
     }
 
     companion object {
-        private const val DELAY = 100_000L
+        private const val DELAY = 10_000L
 
         val locations = listOf(
             LocationCoordinates(60.169418, 24.931618),
